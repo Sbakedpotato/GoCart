@@ -1,18 +1,31 @@
-import React from 'react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console.info('Login request', form)
+    setError('')
+    setLoading(true)
+    try {
+      await login(form.email, form.password)
+      navigate('/account')
+    } catch (err) {
+      setError(err.message || 'Unable to login')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -50,11 +63,14 @@ const LoginPage = () => {
         </div>
         <button
           type="submit"
-          className="w-full rounded-full bg-brand-blue py-3 font-semibold text-white hover:bg-slate-900"
+          disabled={loading}
+          className="w-full rounded-full bg-brand-blue py-3 font-semibold text-white hover:bg-slate-900 disabled:opacity-50"
         >
-          Continue
+          {loading ? 'Signing in...' : 'Continue'}
         </button>
       </form>
+
+      {error && <p className="mt-3 text-center text-sm text-red-500">{error}</p>}
 
       <p className="mt-4 text-sm text-center text-slate-500">
         New to GoCart?{' '}
@@ -67,4 +83,3 @@ const LoginPage = () => {
 }
 
 export default LoginPage
-

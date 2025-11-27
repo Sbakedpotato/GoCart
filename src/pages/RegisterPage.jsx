@@ -1,18 +1,35 @@
-import React from 'react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const RegisterPage = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const { register } = useAuth()
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console.info('Register request', form)
+    setError('')
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+    setLoading(true)
+    try {
+      await register(form.name, form.email, form.password)
+      navigate('/account')
+    } catch (err) {
+      setError(err.message || 'Unable to register')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -71,11 +88,14 @@ const RegisterPage = () => {
         </div>
         <button
           type="submit"
-          className="w-full rounded-full bg-brand-orange py-3 font-semibold text-white hover:bg-orange-500"
+          disabled={loading}
+          className="w-full rounded-full bg-brand-orange py-3 font-semibold text-white hover:bg-orange-500 disabled:opacity-50"
         >
-          Create Account
+          {loading ? 'Creating...' : 'Create Account'}
         </button>
       </form>
+
+      {error && <p className="mt-3 text-center text-sm text-red-500">{error}</p>}
 
       <p className="mt-4 text-sm text-center text-slate-500">
         Already have an account?{' '}
@@ -88,4 +108,3 @@ const RegisterPage = () => {
 }
 
 export default RegisterPage
-

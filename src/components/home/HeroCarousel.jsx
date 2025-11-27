@@ -24,11 +24,15 @@ const HeroCarousel = ({ banners = [] }) => {
   return (
     <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r shadow-card text-white">
       <img
-        src={current.image}
+        src={current.image || current.imageUrl}
         alt={current.title}
         className="absolute inset-0 h-full w-full object-cover opacity-60"
       />
-      <div className={`absolute inset-0 bg-gradient-to-r ${current.background}`} />
+      <div
+        className={`absolute inset-0 bg-gradient-to-r ${
+          current.background || 'from-slate-900/80 to-slate-700/60'
+        }`}
+      />
       <div className="relative z-10 flex flex-col gap-4 px-8 py-12 md:flex-row md:items-center md:justify-between">
         <div className="max-w-xl space-y-4">
           <p className="text-sm uppercase tracking-[0.3em]">GoCart Exclusive</p>
@@ -68,4 +72,3 @@ const HeroCarousel = ({ banners = [] }) => {
 }
 
 export default HeroCarousel
-

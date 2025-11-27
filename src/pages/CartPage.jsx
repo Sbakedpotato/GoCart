@@ -1,9 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
+import { api } from '../services/api'
 
 const CartPage = () => {
-  const { items, subtotal, updateQuantity, removeFromCart } = useCart()
+  const { items, subtotal, updateQuantity, removeFromCart, clearCart } = useCart()
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const [shipping, setShipping] = useState({
+    recipient: '',
+    line1: '',
+    city: '',
+    phone: '',
+    label: 'Home',
+  })
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
 
   if (!items.length) {
     return (
@@ -20,6 +34,34 @@ const CartPage = () => {
         </Link>
       </div>
     )
+  }
+
+  const handleShippingChange = (event) => {
+    const { name, value } = event.target
+    setShipping((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      navigate('/login')
+      return
+    }
+    setLoading(true)
+    setError('')
+    setMessage('')
+    try {
+      const payload = {
+        items: items.map((item) => ({ productId: item.id, quantity: item.quantity })),
+        shipping,
+      }
+      const result = await api.checkout(payload)
+      clearCart()
+      setMessage(`Order ${result.orderId} placed! Total Rs. ${result.total.toLocaleString()}`)
+    } catch (err) {
+      setError(err.message || 'Checkout failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -85,9 +127,57 @@ const CartPage = () => {
             <span>Rs. {subtotal.toLocaleString()}</span>
           </div>
         </div>
-        <button className="mt-6 w-full rounded-full bg-brand-orange py-3 font-semibold text-white">
-          Proceed to Checkout
+        <div className="mt-6 space-y-3 text-sm">
+          <div>
+            <label className="text-xs font-semibold uppercase text-slate-500">Recipient</label>
+            <input
+              name="recipient"
+              value={shipping.recipient}
+              onChange={handleShippingChange}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+              placeholder="Name"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold uppercase text-slate-500">Phone</label>
+            <input
+              name="phone"
+              value={shipping.phone}
+              onChange={handleShippingChange}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+              placeholder="+92 ..."
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold uppercase text-slate-500">Address</label>
+            <input
+              name="line1"
+              value={shipping.line1}
+              onChange={handleShippingChange}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+              placeholder="Street, house no."
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold uppercase text-slate-500">City</label>
+            <input
+              name="city"
+              value={shipping.city}
+              onChange={handleShippingChange}
+              className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+              placeholder="City"
+            />
+          </div>
+        </div>
+        <button
+          onClick={handleCheckout}
+          disabled={loading}
+          className="mt-6 w-full rounded-full bg-brand-orange py-3 font-semibold text-white disabled:opacity-50"
+        >
+          {loading ? 'Placing order...' : isAuthenticated ? 'Place Order' : 'Sign in to checkout'}
         </button>
+        {error && <p className="mt-2 text-center text-xs text-red-500">{error}</p>}
+        {message && <p className="mt-2 text-center text-xs text-emerald-600">{message}</p>}
         <p className="mt-2 text-center text-xs text-slate-400">
           Secured by GoCart Pay. Taxes calculated at checkout.
         </p>
@@ -97,4 +187,3 @@ const CartPage = () => {
 }
 
 export default CartPage
-

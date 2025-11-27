@@ -20,13 +20,13 @@ const FlashDeals = ({ products = [] }) => {
             <ProductCard product={product} />
             <div className="mt-2 px-2">
               <div className="mb-1 flex items-center justify-between text-xs text-white/80">
-                <span>{product.claimed}% claimed</span>
+                <span>{product.claimed ?? 0}% claimed</span>
                 <span>Hurry!</span>
               </div>
               <div className="h-2 w-full rounded-full bg-white/20">
                 <div
                   className="h-full rounded-full bg-brand-orange"
-                  style={{ width: `${product.claimed}%` }}
+                  style={{ width: `${product.claimed ?? 0}%` }}
                 />
               </div>
             </div>
@@ -38,4 +38,3 @@ const FlashDeals = ({ products = [] }) => {
 }
 
 export default FlashDeals
-

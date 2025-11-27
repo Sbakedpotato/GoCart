@@ -25,6 +25,7 @@ const sortProducts = (products, sortKey) => {
 const CategoryPage = () => {
   const { categoryId } = useParams()
   const [allProducts, setAllProducts] = useState([])
+  const [error, setError] = useState('')
   const [sort, setSort] = useState('relevance')
   const [filters, setFilters] = useState({ minPrice: '', maxPrice: '', brands: [], rating: null })
   const [page, setPage] = useState(1)
@@ -32,10 +33,14 @@ const CategoryPage = () => {
 
   useEffect(() => {
     const load = async () => {
-      const data = categoryId
-        ? await api.getProductsByCategory(categoryId)
-        : await api.listProducts()
-      setAllProducts(data || [])
+      try {
+        const data = categoryId
+          ? await api.getProductsByCategory(categoryId)
+          : await api.listProducts()
+        setAllProducts(data || [])
+      } catch (err) {
+        setError('Unable to load products.')
+      }
     }
     load()
   }, [categoryId])
@@ -91,7 +96,9 @@ const CategoryPage = () => {
           </select>
         </div>
 
-        {paginated.length ? (
+        {error ? (
+          <div className="rounded-2xl bg-white p-10 text-center text-red-500">{error}</div>
+        ) : paginated.length ? (
           <>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {paginated.map((product) => (
@@ -123,4 +130,3 @@ const CategoryPage = () => {
 }
 
 export default CategoryPage
-

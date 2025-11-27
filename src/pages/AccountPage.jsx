@@ -11,6 +11,7 @@ const tabs = [
 const AccountPage = () => {
   const [activeTab, setActiveTab] = useState('overview')
   const [account, setAccount] = useState(null)
+  const [error, setError] = useState('')
   const [newAddress, setNewAddress] = useState({
     label: '',
     recipient: '',
@@ -21,11 +22,27 @@ const AccountPage = () => {
 
   useEffect(() => {
     const fetchAccount = async () => {
-      const data = await api.getAccountOverview()
-      setAccount(data)
+      try {
+        const data = await api.getAccountOverview()
+        if (data?.user) {
+          setAccount({
+            ...data.user,
+            orders: data.orders || [],
+            addresses: data.addresses || [],
+          })
+        } else {
+          setAccount(data || { orders: [], addresses: [] })
+        }
+      } catch (err) {
+        setError('Please sign in to view your account.')
+      }
     }
     fetchAccount()
   }, [])
+
+  if (error) {
+    return <div className="rounded-3xl bg-white p-6 text-center text-slate-500">{error}</div>
+  }
 
   if (!account) {
     return <div className="text-center text-slate-500">Loading account...</div>
@@ -78,30 +95,37 @@ const AccountPage = () => {
 
       {activeTab === 'orders' && (
         <div className="space-y-4">
-          {account.orders.map((order) => (
+          {(account.orders || []).map((order) => (
             <div key={order.id} className="rounded-3xl border border-slate-200 bg-white p-6">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-sm text-slate-500">{order.date}</p>
+                  <p className="text-sm text-slate-500">
+                    {order.date || order.createdAt || 'Recent order'}
+                  </p>
                   <h3 className="text-lg font-semibold text-slate-900">{order.id}</h3>
                 </div>
                 <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                   {order.status}
                 </span>
               </div>
-              <p className="mt-4 text-sm text-slate-600">Items: {order.items.join(', ')}</p>
+              <p className="mt-4 text-sm text-slate-600">
+                Items: {Array.isArray(order.items) ? order.items.join(', ') : ''}
+              </p>
               <p className="mt-2 text-xl font-bold text-brand-blue">
-                Rs. {order.total.toLocaleString()}
+                Rs. {(order.total ?? 0).toLocaleString()}
               </p>
             </div>
           ))}
+          {!(account.orders || []).length && (
+            <p className="text-center text-slate-500">No orders yet.</p>
+          )}
         </div>
       )}
 
       {activeTab === 'addresses' && (
         <div className="space-y-6">
           <div className="space-y-4">
-            {account.addresses.map((address) => (
+            {(account.addresses || []).map((address) => (
               <div key={address.id} className="rounded-3xl border border-slate-200 bg-white p-6">
                 <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{address.label}</p>
                 <h4 className="mt-2 text-lg font-semibold text-slate-900">{address.recipient}</h4>
@@ -147,4 +171,3 @@ const AccountPage = () => {
 }
 
 export default AccountPage
-

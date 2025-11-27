@@ -1,11 +1,18 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
-import { categoryShortcuts } from '../../data/mockData'
+import { api } from '../../services/api'
 
 const SearchBar = () => {
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('all')
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    api
+      .getCategoryShortcuts()
+      .then((data) => setCategories(data || []))
+      .catch(() => setCategories([]))
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -25,9 +32,9 @@ const SearchBar = () => {
         className="rounded-l-full border-r border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 focus:outline-none"
       >
         <option value="all">All Categories</option>
-        {categoryShortcuts.map((item) => (
+        {categories.map((item) => (
           <option key={item.id} value={item.id}>
-            {item.label}
+            {item.label || item.name}
           </option>
         ))}
       </select>
@@ -52,4 +59,3 @@ const SearchBar = () => {
 }
 
 export default SearchBar
-

@@ -1,6 +1,6 @@
 # GoCart
 
-GoCart is a Vite-powered React storefront that showcases how AI-assisted commerce can look and feel. It focuses on fast client-side navigation, Tailwind-driven UI polish, and mock APIs that simulate personalization flows without needing a backend.
+GoCart is a Vite-powered React storefront that now ships with an Express + MySQL + JWT starter API. The frontend focuses on fast client-side navigation, Tailwind-driven UI polish, and rich mock data; the backend adds a real auth surface you can extend with products, carts, and orders.
 
 ## Features
 
@@ -10,6 +10,7 @@ GoCart is a Vite-powered React storefront that showcases how AI-assisted commerc
 - Cart workspace with quantity editing, inline totals, empty-state onboarding, and a summarized checkout sidebar.
 - Account placeholder that renders mock orders, saved addresses, and tabbed navigation to demonstrate profile flows.
 - Client-side mock API (`src/services/api.js`) that wraps rich seed data (`src/data/mockData.js`) and simulates latency for a realistic UX.
+- New Express backend scaffold (`server/`) with JWT-based auth, MySQL connection pooling, and health checks.
 
 ## Tech Stack
 
@@ -17,6 +18,7 @@ GoCart is a Vite-powered React storefront that showcases how AI-assisted commerc
 - Vite 7 for dev server, HMR, and production builds.
 - Tailwind CSS 3 for utility-first styling plus a small set of brand colors defined in `tailwind.config.js`.
 - React Icons for lightweight iconography across layout components.
+- Express 4 + MySQL2 for the API layer, JWT for stateless auth, and bcrypt for password hashing.
 
 ## Getting Started
 
@@ -24,18 +26,46 @@ GoCart is a Vite-powered React storefront that showcases how AI-assisted commerc
 
 - Node.js 18+ (needed by Vite 7 and React 19).
 - npm (ships with Node).
+- XAMPP MySQL (or any MySQL 8+ instance).
 
-### Installation
+### Install dependencies
 
-1. Install dependencies:
+```bash
+npm install
+```
+
+### Configure the API
+
+1. Copy the sample environment file and fill in your settings:
    ```bash
-   npm install
+   cp server/.env.example server/.env
    ```
-2. Start the development server:
-   ```bash
-   npm run dev
+2. Start MySQL (e.g., via XAMPP) and create the database/tables:
+   ```sql
+   -- From MySQL CLI or phpMyAdmin
+   SOURCE server/schema.sql;
    ```
-3. Open the printed localhost URL (default `http://localhost:5173`) and begin exploring.
+   The defaults assume `root` with no password on `localhost:3306`; update `server/.env` if yours differ.
+3. (Optional) Change `CLIENT_ORIGIN` in `server/.env` if your frontend dev server is not `http://localhost:5173`.
+
+### Run the app
+
+Terminal 1 (API):
+```bash
+npm run server    # starts Express on PORT from server/.env (default 4000)
+```
+
+Terminal 2 (frontend):
+```bash
+npm run dev       # starts Vite on 5173
+```
+
+Open the printed URLs to develop against both services.
+
+If your API runs on a different host/port, create `./.env` (frontend) with:
+```
+VITE_API_URL=http://localhost:4000/api
+```
 
 ### Production Build
 
@@ -43,6 +73,25 @@ GoCart is a Vite-powered React storefront that showcases how AI-assisted commerc
 npm run build   # bundles assets into dist/
 npm run preview # serves the production build locally
 ```
+
+### API surface (for Postman)
+- `POST /api/auth/register` `{ name, email, password }` → `{ token, user }`
+- `POST /api/auth/login` `{ email, password }` → `{ token, user }`
+- `GET /api/auth/me` (Bearer token)
+- `GET /api/account/me` (Bearer token) → `{ user, orders, addresses }`
+- `GET /api/catalog/hero-banners`
+- `GET /api/catalog/categories`
+- `GET /api/catalog/brands`
+- `GET /api/catalog/flash-deals`
+- `GET /api/catalog/recommendations`
+- `GET /api/catalog/notification`
+- `GET /api/products`
+- `GET /api/products/category/:categoryId`
+- `GET /api/products/:productId`
+- `POST /api/orders/checkout` (Bearer token) `{ items:[{productId,quantity}], shipping:{recipient,line1,city,phone,label?,addressId?} }`
+- `GET /api/wishlist` (Bearer token)
+- `POST /api/wishlist` (Bearer token) `{ productId }`
+- `DELETE /api/wishlist/:productId` (Bearer token)
 
 ## Project Structure
 
@@ -56,6 +105,14 @@ src/
   pages/             # Route-level screens (Home, Category, Product, Cart, Auth, Account)
   services/          # Mock API abstraction that simulates network latency
   main.jsx           # App bootstrap with BrowserRouter and CartProvider
+
+server/
+  index.js           # Express bootstrap and route registration
+  config/            # Env loader and MySQL pool
+  routes/            # Route modules (auth, account, catalog, products)
+  middleware/        # Auth helpers (JWT verification)
+  schema.sql         # Database bootstrap (users, products, content, orders, addresses)
+  .env.example       # Sample server configuration
 ```
 
 Tailwind styles are declared in `src/index.css`, while reusable color tokens and font families live in `tailwind.config.js`.
@@ -72,4 +129,3 @@ You can extend the experience by adding more seed data, connecting the API layer
 1. Wire forms (login/register/address) to a real API or Supabase/Firebase auth.
 2. Persist cart state to `localStorage` or backend sessions for returning users.
 3. Add Vitest or Cypress coverage for cart math, filtering, and navigation guard rails.
-

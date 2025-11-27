@@ -1,48 +1,73 @@
-import {
-  heroBanners,
-  categoryShortcuts,
-  recommendationSections,
-  flashDeals,
-  featuredBrands,
-  mockOrders,
-  mockAddresses,
-  getProductById,
-  getProductsByCategory,
-  products,
-} from '../data/mockData'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
 
-const clone = (data) => JSON.parse(JSON.stringify(data))
+const getAuthHeaders = () => {
+  if (typeof localStorage === 'undefined') return {}
+  const token = localStorage.getItem('token')
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
-const simulateNetwork = (data, delay = 150) =>
-  new Promise((resolve) => setTimeout(() => resolve(clone(data)), delay))
+async function request(path, options = {}) {
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.auth ? getAuthHeaders() : {}),
+      ...(options.headers || {}),
+    },
+    ...options,
+  })
 
-const listByCategoryOrAll = (categoryId) => {
-  const data = getProductsByCategory(categoryId)
-  return data.length ? data : products
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || `Request failed: ${response.status}`)
+  }
+  return response.json()
 }
 
 export const api = {
-  getHeroBanners: () => simulateNetwork(heroBanners),
-  getCategoryShortcuts: () => simulateNetwork(categoryShortcuts),
-  getRecommendations: () =>
-    simulateNetwork(
-      recommendationSections.map((section) => ({
-        ...section,
-        products: section.products.map((id) => getProductById(id)).filter(Boolean),
-      }))
-    ),
-  getFlashDeals: () => simulateNetwork(flashDeals),
-  getFeaturedBrands: () => simulateNetwork(featuredBrands),
-  listProducts: () => simulateNetwork(products),
-  getProductsByCategory: (categoryId) => simulateNetwork(listByCategoryOrAll(categoryId)),
-  getProductDetail: (productId) => simulateNetwork(getProductById(productId)),
-  getAccountOverview: () =>
-    simulateNetwork({
-      name: 'Reyya Khan',
-      email: 'reyya@example.com',
-      phone: '+92 300 1234567',
-      orders: mockOrders,
-      addresses: mockAddresses,
+  getHeroBanners: async () => {
+    const data = await request('/catalog/hero-banners')
+    return (data || []).map((item) => ({ ...item, image: item.image || item.imageUrl }))
+  },
+  getCategoryShortcuts: async () => {
+    const data = await request('/catalog/categories')
+    return (data || []).map((item) => ({ ...item, label: item.label || item.name }))
+  },
+  getRecommendations: () => request('/catalog/recommendations'),
+  getFlashDeals: () => request('/catalog/flash-deals'),
+  getFeaturedBrands: async () => {
+    const data = await request('/catalog/brands')
+    return (data || []).map((item) => ({ ...item, image: item.image || item.imageUrl }))
+  },
+  listProducts: () => request('/products'),
+  getProductsByCategory: (categoryId) => request(`/products/category/${categoryId}`),
+  getProductDetail: (productId) => request(`/products/${productId}`),
+  getAccountOverview: () => request('/account/me', { auth: true }),
+  getNotification: () => request('/catalog/notification'),
+  checkout: (payload) => request('/orders/checkout', { method: 'POST', body: JSON.stringify(payload), auth: true }),
+  getWishlist: () => request('/wishlist', { auth: true }),
+  addToWishlist: (productId) =>
+    request('/wishlist', {
+      method: 'POST',
+      body: JSON.stringify({ productId }),
+      auth: true,
+    }),
+  removeFromWishlist: (productId) =>
+    request(`/wishlist/${productId}`, {
+      method: 'DELETE',
+      auth: true,
     }),
 }
 
+export async function login(email, password) {
+  return request('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  })
+}
+
+export async function register(name, email, password) {
+  return request('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, password }),
+  })
+}

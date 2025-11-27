@@ -1,30 +1,47 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { FiStar, FiTruck } from 'react-icons/fi'
+import { FiStar, FiTruck, FiHeart } from 'react-icons/fi'
 import { api } from '../services/api'
 import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
+import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import ProductCard from '../components/common/ProductCard'
 
 const ProductPage = () => {
   const { productId } = useParams()
   const { addToCart } = useCart()
+  const { toggle, items } = useWishlist()
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [related, setRelated] = useState([])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const load = async () => {
-      const detail = await api.getProductDetail(productId)
-      setProduct(detail)
-      if (detail?.categoryId) {
-        const similar = await api.getProductsByCategory(detail.categoryId)
-        setRelated(similar.filter((item) => item.id !== productId))
+      try {
+        const detail = await api.getProductDetail(productId)
+        setProduct(detail)
+        if (detail?.categoryId) {
+          const similar = await api.getProductsByCategory(detail.categoryId)
+          setRelated(similar.filter((item) => item.id !== productId))
+        }
+      } catch (err) {
+        setError('Product not found or unavailable.')
       }
     }
     load()
     window.scrollTo(0, 0)
   }, [productId])
+
+  if (error) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-slate-500">{error}</div>
+    )
+  }
 
   if (!product) {
     return (
@@ -38,19 +55,37 @@ const ProductPage = () => {
     addToCart(product, quantity)
   }
 
+  const inWishlist = items.some((item) => item.id === product.id)
+
+  const handleWishlist = async () => {
+    if (!isAuthenticated) {
+      navigate('/login')
+      return
+    }
+    await toggle(product)
+  }
+
   return (
     <div className="space-y-12">
       <div className="grid gap-6 lg:grid-cols-12">
         <div className="rounded-3xl border border-slate-200 bg-white p-4 lg:col-span-5">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="h-96 w-full rounded-2xl object-cover"
-          />
+          {product.image ? (
+            <img
+              src={product.image}
+              alt={product.title}
+              className="h-96 w-full rounded-2xl object-cover"
+            />
+          ) : (
+            <div className="flex h-96 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+              No image
+            </div>
+          )}
           <div className="mt-4 grid grid-cols-4 gap-2">
-            {[product.image, product.image, product.image, product.image].map((thumb, index) => (
-              <img key={index} src={thumb} alt="thumb" className="h-20 rounded-xl object-cover" />
-            ))}
+            {[product.image, product.image, product.image, product.image]
+              .filter(Boolean)
+              .map((thumb, index) => (
+                <img key={index} src={thumb} alt="thumb" className="h-20 rounded-xl object-cover" />
+              ))}
           </div>
         </div>
 
@@ -128,8 +163,18 @@ const ProductPage = () => {
             >
               Add to Cart
             </button>
-            <button className="mt-3 w-full rounded-full border border-brand-blue py-3 font-semibold text-brand-blue">
-              Buy Now
+            <button
+              onClick={handleWishlist}
+              className={`mt-3 w-full rounded-full border py-3 font-semibold ${
+                inWishlist
+                  ? 'border-brand-orange text-brand-orange'
+                  : 'border-brand-blue text-brand-blue'
+              }`}
+            >
+              <span className="inline-flex items-center gap-2">
+                <FiHeart />
+                {inWishlist ? 'Remove from Wishlist' : 'Save to Wishlist'}
+              </span>
             </button>
           </div>
         </div>
@@ -176,4 +221,3 @@ const ProductPage = () => {
 }
 
 export default ProductPage
-
