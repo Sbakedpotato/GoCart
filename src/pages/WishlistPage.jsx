@@ -16,7 +16,7 @@ const WishlistPage = () => {
         <p className="text-xl font-semibold text-slate-800">Sign in to view your wishlist</p>
         <button
           onClick={() => navigate('/login')}
-          className="mt-4 rounded-2xl bg-brand-blue px-6 py-3 font-semibold text-white shadow-lg shadow-brand-blue/30"
+          className="mt-4 rounded-2xl bg-brand-accent px-6 py-3 font-semibold text-white shadow-lg shadow-brand-accent/30"
         >
           Sign In
         </button>
@@ -38,7 +38,7 @@ const WishlistPage = () => {
         <p className="mt-2 text-sm text-slate-500">Browse products and save your favorites.</p>
         <Link
           to="/"
-          className="mt-6 inline-block rounded-2xl bg-brand-blue px-6 py-3 font-semibold text-white shadow-lg shadow-brand-blue/30 transition hover:-translate-y-0.5"
+          className="mt-6 inline-block rounded-2xl bg-brand-accent px-6 py-3 font-semibold text-white shadow-lg shadow-brand-accent/30 transition hover:-translate-y-0.5"
         >
           Discover products
         </Link>

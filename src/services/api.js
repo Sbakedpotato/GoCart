@@ -48,6 +48,12 @@ export const api = {
     return (data || []).map((item) => ({ ...item, image: item.image || item.imageUrl }))
   },
   listProducts: () => request('/products'),
+  searchProducts: (keyword, categoryId) => {
+    const params = new URLSearchParams()
+    if (keyword) params.append('q', keyword)
+    if (categoryId && categoryId !== 'all') params.append('category', categoryId)
+    return request(`/products?${params.toString()}`)
+  },
   getProductsByCategory: (categoryId) => request(`/products/category/${categoryId}`),
   getProductDetail: (productId) => request(`/products/${productId}`),
   getAccountOverview: () => request('/account/me', { auth: true }),
@@ -63,6 +69,39 @@ export const api = {
   removeFromWishlist: (productId) =>
     request(`/wishlist/${productId}`, {
       method: 'DELETE',
+      auth: true,
+    }),
+  getAdminOrders: (params) => {
+    const query = new URLSearchParams(params).toString()
+    return request(`/admin/orders?${query}`, { auth: true })
+  },
+  getAdminOrderDetail: (id) => request(`/admin/orders/${id}`, { auth: true }),
+  updateOrderStatus: (id, status) =>
+    request(`/admin/orders/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+      auth: true,
+    }),
+  getAdminProducts: (params) => {
+    const query = new URLSearchParams(params).toString()
+    return request(`/admin/products?${query}`, { auth: true })
+  },
+  createProduct: (data) =>
+    request('/admin/products', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      auth: true,
+    }),
+  deleteProduct: (id) =>
+    request(`/admin/products/${id}`, {
+      method: 'DELETE',
+      auth: true,
+    }),
+  getAdminProduct: (id) => request(`/admin/products/${id}`, { auth: true }),
+  updateProduct: (id, data) =>
+    request(`/admin/products/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
       auth: true,
     }),
 }

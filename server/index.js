@@ -6,6 +6,10 @@ import productRoutes from './routes/products.js'
 import accountRoutes from './routes/account.js'
 import orderRoutes from './routes/orders.js'
 import wishlistRoutes from './routes/wishlist.js'
+import adminRoutes from './routes/admin.js'
+import statsRoutes from './routes/stats.js'
+import adminOrdersRoutes from './routes/adminOrders.js'
+import adminProductsRoutes from './routes/adminProducts.js'
 import { loadEnv } from './config/env.js'
 
 const env = loadEnv()
@@ -25,6 +29,10 @@ app.use('/api/catalog', catalogRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/wishlist', wishlistRoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/admin/orders', adminOrdersRoutes)
+app.use('/api/admin/products', adminProductsRoutes)
+app.use('/api/stats', statsRoutes)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })

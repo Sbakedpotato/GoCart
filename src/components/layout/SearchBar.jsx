@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
+import { useNavigate } from 'react-router-dom'
 import { api } from '../../services/api'
 
 const SearchBar = () => {
+  const navigate = useNavigate()
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('all')
   const [categories, setCategories] = useState([])
@@ -16,8 +18,8 @@ const SearchBar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // TODO: connect with actual search endpoint
-    console.info('Search request', { keyword, category })
+    if (!keyword.trim()) return
+    navigate(`/search?q=${encodeURIComponent(keyword)}&category=${category}`)
   }
 
   return (
@@ -49,7 +51,7 @@ const SearchBar = () => {
 
       <button
         type="submit"
-        className="flex items-center gap-2 rounded-r-full bg-brand-orange px-6 font-semibold text-white hover:bg-orange-500 transition"
+        className="flex items-center gap-2 rounded-r-full bg-brand-black px-6 font-semibold text-white hover:bg-brand-dark transition"
       >
         <FiSearch />
         Search

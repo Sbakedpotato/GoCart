@@ -8,7 +8,7 @@ import { loadEnv } from '../config/env.js'
 const router = express.Router()
 const { JWT_SECRET, JWT_EXPIRES_IN = '7d' } = loadEnv(['JWT_SECRET'])
 
-const userColumns = 'id, name, email, password_hash AS passwordHash, created_at AS createdAt'
+const userColumns = 'id, name, email, role, password_hash AS passwordHash, created_at AS createdAt'
 
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body || {}
@@ -34,10 +34,10 @@ router.post('/register', async (req, res) => {
     )
 
     const userId = result.insertId
-    const token = signToken({ id: userId, email })
+    const token = signToken({ id: userId, email, role: 'user' })
     return res.status(201).json({
       token,
-      user: { id: userId, name, email },
+      user: { id: userId, name, email, role: 'user' },
     })
   } catch (error) {
     console.error('Register error:', error)
@@ -68,10 +68,10 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
 
-    const token = signToken({ id: user.id, email: user.email })
+    const token = signToken({ id: user.id, email: user.email, role: user.role })
     return res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
     })
   } catch (error) {
     console.error('Login error:', error)
@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', authenticate, async (req, res) => {
   try {
     const [rows] = await query(
-      `SELECT id, name, email, created_at AS createdAt FROM users WHERE id = ? LIMIT 1`,
+      `SELECT id, name, email, role, created_at AS createdAt FROM users WHERE id = ? LIMIT 1`,
       [req.user.id]
     )
     const user = rows[0]

@@ -39,7 +39,28 @@ const safeParse = (value, fallback) => {
 }
 
 router.get('/', async (req, res) => {
-  const [rows] = await query(`${baseSelect} ORDER BY p.created_at DESC`)
+  const { q, category } = req.query
+  let sql = baseSelect
+  const params = []
+  const conditions = []
+
+  if (q) {
+    conditions.push('(p.title LIKE ? OR p.description LIKE ?)')
+    params.push(`%${q}%`, `%${q}%`)
+  }
+
+  if (category && category !== 'all') {
+    conditions.push('p.category_id = ?')
+    params.push(category)
+  }
+
+  if (conditions.length > 0) {
+    sql += ' WHERE ' + conditions.join(' AND ')
+  }
+
+  sql += ' ORDER BY p.created_at DESC'
+
+  const [rows] = await query(sql, params)
   res.json(rows.map(mapProduct))
 })
 

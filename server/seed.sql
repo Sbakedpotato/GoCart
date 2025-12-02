@@ -20,8 +20,9 @@ TRUNCATE TABLE site_content;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Users
-INSERT INTO users (id, name, email, password_hash) VALUES
-(1, 'User1', 'User@example.com', '$2a$12$wbX016wYA8JCjvn64GporeeckICej2xNlVI2zMO20bBMz2olf5S2K'); -- Password: 12345678
+INSERT INTO users (id, name, email, password_hash, role) VALUES
+(1, 'User1', 'User@example.com', '$2a$12$wbX016wYA8JCjvn64GporeeckICej2xNlVI2zMO20bBMz2olf5S2K', 'user'), -- Password: 12345678
+(2, 'Admin', 'admin@gocart.com', '$2a$12$wbX016wYA8JCjvn64GporeeckICej2xNlVI2zMO20bBMz2olf5S2K', 'admin'); -- Password: 12345678
 
 -- 2. Categories
 INSERT INTO categories (id, name, image_url) VALUES
@@ -88,10 +89,10 @@ INSERT INTO products (id, title, description, price, old_price, rating, review_c
 ('lg-ultragear', 'LG UltraGear 27"', 'Nano IPS 1ms gaming monitor.', 32999.00, 45000.00, 4.7, 210, 'monitors', 'lg', 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=1000', 'In Stock', 27, '["27-inch QHD Nano IPS", "144Hz Refresh Rate", "NVIDIA G-SYNC Compatible", "HDR 10"]', '{"Resolution": "2560 x 1440", "Refresh Rate": "144Hz", "Response Time": "1ms"}');
 
 -- 5. Hero Banners
-INSERT INTO hero_banners (id, title, subtitle, cta, image_url, background) VALUES
-('banner-1', 'iPhone 15 Pro', 'Titanium. So strong. So light. So Pro.', 'Shop Now', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=2000', 'bg-black'),
-('banner-2', 'MacBook Air 15"', 'Impressively big. Impossibly thin.', 'Learn More', 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=2000', 'bg-[#F5F5F7]'),
-('banner-3', 'Sony WH-1000XM5', 'Your world. Nothing else.', 'Buy Now', 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=2000', 'bg-[#E5E5E5]');
+INSERT INTO hero_banners (id, title, subtitle, cta, link, image_url, background) VALUES
+('banner-1', 'iPhone 15 Pro', 'Titanium. So strong. So light. So Pro.', 'Shop Now', '/product/iphone-15-pro', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=2000', 'bg-black'),
+('banner-2', 'MacBook Air 15"', 'Impressively big. Impossibly thin.', 'Learn More', '/product/macbook-pro-14', 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=2000', 'bg-[#F5F5F7]'),
+('banner-3', 'Sony WH-1000XM5', 'Your world. Nothing else.', 'Buy Now', '/product/sony-wh1000xm5', 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=2000', 'bg-[#E5E5E5]');
 
 -- 6. Flash Deals
 INSERT INTO flash_deals (product_id, claimed, starts_at, ends_at) VALUES

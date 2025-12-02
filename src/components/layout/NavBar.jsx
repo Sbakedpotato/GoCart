@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { FiChevronDown } from 'react-icons/fi'
 import { api } from '../../services/api'
 
 const NavBar = () => {
@@ -19,20 +18,19 @@ const NavBar = () => {
   ]
 
   const navLinks = categories.length
-    ? categories.slice(0, 5).map((cat) => ({ path: `/category/${cat.id}`, label: cat.label }))
+    ? categories.map((cat) => ({ path: `/category/${cat.id}`, label: cat.label }))
     : fallbackLinks
 
   return (
     <nav className="border-b border-brand-light bg-white/50 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-[1400px] items-center gap-8 px-6 py-3 text-sm font-medium text-brand-gray">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-center gap-8 px-6 py-3 text-sm font-medium text-brand-gray">
         <Link
           to="/categories"
           className="flex items-center gap-2 text-brand-dark hover:text-brand-black"
         >
-          <FiChevronDown />
           All Categories
         </Link>
-        <div className="flex flex-1 gap-6 overflow-x-auto no-scrollbar">
+        <div className="flex gap-6 overflow-x-auto no-scrollbar">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
