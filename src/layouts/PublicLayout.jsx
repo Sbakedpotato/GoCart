@@ -6,11 +6,13 @@ import NavBar from '../components/layout/NavBar'
 import Footer from '../components/layout/Footer'
 
 const PublicLayout = () => (
-  <div className="min-h-screen bg-slate-50 text-slate-900">
+  <div className="min-h-screen bg-brand-white text-brand-dark font-sans selection:bg-brand-light selection:text-brand-black">
     <NotificationBar />
-    <Header />
-    <NavBar />
-    <main className="mx-auto w-full max-w-6xl px-4 py-8">
+    <div className="sticky top-0 z-50 w-full">
+      <Header />
+      <NavBar />
+    </div>
+    <main className="mx-auto w-full max-w-[1400px] px-6 py-12">
       <Outlet />
     </main>
     <Footer />
@@ -18,4 +20,3 @@ const PublicLayout = () => (
 )
 
 export default PublicLayout
-

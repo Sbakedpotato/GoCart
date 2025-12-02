@@ -33,93 +33,86 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-xl rounded-3xl bg-white p-10 shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-      <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-slate-900">Create your GoCart account</h1>
-        <p className="mt-2 text-sm text-slate-500">
-          Unlock personalized recommendations and AI-powered shopping tools.
+
+    <div className="mx-auto max-w-md pt-20 pb-20">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold tracking-tight text-brand-black">Create an account</h1>
+        <p className="mt-3 text-brand-gray">
+          Join GoCart for a personalized shopping experience.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="relative">
+        <div className="space-y-2">
+          <label className="text-xs font-bold uppercase tracking-wide text-brand-black">Full Name</label>
           <input
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
-            className="peer w-full rounded-2xl border border-slate-200 bg-slate-50/40 px-4 py-4 text-sm text-slate-900 shadow-inner focus:border-brand-blue focus:bg-white focus:ring-4 focus:ring-brand-blue/20"
-            placeholder=" "
+            className="w-full rounded-xl border border-brand-light bg-brand-light/20 px-4 py-3 text-sm font-medium focus:border-brand-black focus:outline-none focus:ring-1 focus:ring-brand-black"
+            placeholder="John Doe"
             required
           />
-          <label className="pointer-events-none absolute left-4 top-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-brand-blue">
-            Full Name
-          </label>
         </div>
 
-        <div className="relative">
+        <div className="space-y-2">
+          <label className="text-xs font-bold uppercase tracking-wide text-brand-black">Email</label>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
-            className="peer w-full rounded-2xl border border-slate-200 bg-slate-50/40 px-4 py-4 text-sm text-slate-900 shadow-inner focus:border-brand-blue focus:bg-white focus:ring-4 focus:ring-brand-blue/20"
-            placeholder=" "
+            className="w-full rounded-xl border border-brand-light bg-brand-light/20 px-4 py-3 text-sm font-medium focus:border-brand-black focus:outline-none focus:ring-1 focus:ring-brand-black"
+            placeholder="name@example.com"
             required
           />
-          <label className="pointer-events-none absolute left-4 top-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-brand-blue">
-            Email
-          </label>
         </div>
 
-        <div className="relative">
+        <div className="space-y-2">
+          <label className="text-xs font-bold uppercase tracking-wide text-brand-black">Password</label>
           <input
             type="password"
             name="password"
             value={form.password}
             onChange={handleChange}
-            className="peer w-full rounded-2xl border border-slate-200 bg-slate-50/40 px-4 py-4 text-sm text-slate-900 shadow-inner focus:border-brand-blue focus:bg-white focus:ring-4 focus:ring-brand-blue/20"
-            placeholder=" "
+            className="w-full rounded-xl border border-brand-light bg-brand-light/20 px-4 py-3 text-sm font-medium focus:border-brand-black focus:outline-none focus:ring-1 focus:ring-brand-black"
+            placeholder="••••••••"
             required
           />
-          <label className="pointer-events-none absolute left-4 top-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-brand-blue">
-            Password
-          </label>
         </div>
 
-        <div className="relative">
+        <div className="space-y-2">
+          <label className="text-xs font-bold uppercase tracking-wide text-brand-black">Confirm Password</label>
           <input
             type="password"
             name="confirmPassword"
             value={form.confirmPassword}
             onChange={handleChange}
-            className="peer w-full rounded-2xl border border-slate-200 bg-slate-50/40 px-4 py-4 text-sm text-slate-900 shadow-inner focus:border-brand-blue focus:bg-white focus:ring-4 focus:ring-brand-blue/20"
-            placeholder=" "
+            className="w-full rounded-xl border border-brand-light bg-brand-light/20 px-4 py-3 text-sm font-medium focus:border-brand-black focus:outline-none focus:ring-1 focus:ring-brand-black"
+            placeholder="••••••••"
             required
           />
-          <label className="pointer-events-none absolute left-4 top-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-brand-blue">
-            Confirm Password
-          </label>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-2xl bg-gradient-to-r from-brand-orange to-amber-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-orange/30 transition hover:translate-y-[-1px] hover:shadow-xl disabled:opacity-50"
+          className="w-full rounded-xl bg-brand-black py-3.5 text-sm font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
         >
-          {loading ? 'Creating...' : 'Create Account'}
+          {loading ? 'Creating account...' : 'Create Account'}
         </button>
       </form>
 
       {error && (
-        <div className="mt-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div className="mt-6 rounded-xl bg-red-50 p-4 text-center text-sm font-medium text-red-600">
           {error}
         </div>
       )}
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-8 text-center text-sm text-brand-gray">
         Already have an account?{' '}
-        <Link to="/login" className="font-semibold text-brand-blue hover:text-slate-900">
+        <Link to="/login" className="font-bold text-brand-black hover:underline">
           Sign in
         </Link>
       </p>

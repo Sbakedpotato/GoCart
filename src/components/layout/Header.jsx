@@ -12,56 +12,52 @@ const Header = () => {
   const cartCount = items.reduce((sum, item) => sum + (item.quantity || 1), 0)
 
   return (
-    <header className="bg-white px-4 py-4 shadow-sm">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <header className="glass sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4">
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <span className="rounded-full bg-brand-orange px-3 py-1 text-sm font-semibold text-white">
-            AI
-          </span>
-          <div>
-            <p className="text-2xl font-bold text-brand-blue">GoCart</p>
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Smarter Shopping, Powered by AI.
-            </p>
-          </div>
+          <span className="text-2xl font-bold tracking-tight text-brand-black">GoCart</span>
         </Link>
 
-        <SearchBar />
+        {/* Search Bar - Centered & Minimal */}
+        <div className="hidden flex-1 px-12 md:block">
+          <SearchBar />
+        </div>
 
-        <div className="flex items-center gap-4 text-slate-600">
+        {/* Actions */}
+        <div className="flex items-center gap-6">
           {user ? (
-            <>
-              <Link to="/account" className="flex flex-col items-center text-xs font-semibold">
-                <FiUser size={22} />
+            <div className="group relative flex items-center gap-2">
+              <Link to="/account" className="text-sm font-medium text-brand-dark hover:text-brand-black">
                 {user.name?.split(' ')[0] || 'Account'}
               </Link>
               <button
                 type="button"
                 onClick={logout}
-                className="flex flex-col items-center text-xs font-semibold text-slate-600"
+                className="text-xs text-brand-gray hover:text-brand-black"
               >
-                Logout
+                (Logout)
               </button>
-            </>
+            </div>
           ) : (
-            <Link to="/login" className="flex flex-col items-center text-xs font-semibold">
-              <FiUser size={22} />
+            <Link to="/login" className="text-sm font-medium text-brand-dark hover:text-brand-black">
               Sign In
             </Link>
           )}
+
           <button
             type="button"
             onClick={() => navigate('/wishlist')}
-            className="flex flex-col items-center text-xs font-semibold text-slate-600"
+            className="text-brand-dark transition-colors hover:text-brand-accent"
+            aria-label="Wishlist"
           >
-            <FiHeart size={22} />
-            Wishlist
+            <FiHeart size={20} />
           </button>
-          <Link to="/cart" className="relative flex flex-col items-center text-xs font-semibold">
-            <FiShoppingCart size={22} />
-            Cart
+
+          <Link to="/cart" className="relative text-brand-dark transition-colors hover:text-brand-accent" aria-label="Cart">
+            <FiShoppingCart size={20} />
             {cartCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-orange px-1 text-[11px] font-bold text-white">
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-black text-[10px] font-bold text-white">
                 {cartCount}
               </span>
             )}

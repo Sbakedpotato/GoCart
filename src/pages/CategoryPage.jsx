@@ -64,64 +64,94 @@ const CategoryPage = () => {
   }, [filters, sort, categoryId])
 
   return (
-    <div className="flex flex-col gap-6 lg:flex-row">
-      <div className="lg:w-1/4">
-        <button
-          className="mb-4 w-full rounded-xl border border-brand-blue/40 bg-white py-3 font-semibold text-brand-blue lg:hidden"
-          onClick={() => setMobileFiltersOpen((prev) => !prev)}
-        >
-          {mobileFiltersOpen ? 'Hide Filters' : 'Show Filters'}
-        </button>
-        <div className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block`}>
-          <FilterSidebar filters={filters} onChange={setFilters} brands={brands} />
+    <div className="flex flex-col gap-12 lg:flex-row">
+      {/* Sidebar */}
+      <div className="lg:w-64 lg:flex-shrink-0">
+        <div className="sticky top-24">
+          <button
+            className="mb-6 flex w-full items-center justify-between rounded-xl border border-brand-light bg-white px-4 py-3 font-medium text-brand-black lg:hidden"
+            onClick={() => setMobileFiltersOpen((prev) => !prev)}
+          >
+            <span>Filters</span>
+            <span className="text-xs text-brand-gray">{mobileFiltersOpen ? 'Hide' : 'Show'}</span>
+          </button>
+
+          <div className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block`}>
+            <FilterSidebar filters={filters} onChange={setFilters} brands={brands} />
+          </div>
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="flex-1">
-        <div className="mb-4 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+        {/* Header & Sort */}
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm text-slate-500">Showing {filteredProducts.length} products</p>
-            <h1 className="text-2xl font-semibold capitalize">{categoryId || 'All Products'}</h1>
+            <h1 className="text-3xl font-bold capitalize tracking-tight text-brand-black">
+              {categoryId || 'All Products'}
+            </h1>
+            <p className="mt-2 text-sm text-brand-gray">
+              Showing {filteredProducts.length} results
+            </p>
           </div>
-          <select
-            value={sort}
-            onChange={(event) => setSort(event.target.value)}
-            className="rounded-full border border-slate-200 px-4 py-2 text-sm"
-          >
-            <option value="relevance">Relevance</option>
-            <option value="priceLow">Price: Low to High</option>
-            <option value="priceHigh">Price: High to Low</option>
-            <option value="newest">Newest</option>
-            <option value="bestselling">Best Selling</option>
-          </select>
+
+          <div className="relative">
+            <select
+              value={sort}
+              onChange={(event) => setSort(event.target.value)}
+              className="appearance-none rounded-lg border-none bg-brand-light/30 py-2.5 pl-4 pr-10 text-sm font-medium text-brand-black focus:ring-0 cursor-pointer hover:bg-brand-light/50 transition-colors"
+            >
+              <option value="relevance">Sort by: Relevance</option>
+              <option value="priceLow">Price: Low to High</option>
+              <option value="priceHigh">Price: High to Low</option>
+              <option value="newest">Newest Arrivals</option>
+              <option value="bestselling">Best Selling</option>
+            </select>
+            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="#171717" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
         </div>
 
         {error ? (
-          <div className="rounded-2xl bg-white p-10 text-center text-red-500">{error}</div>
+          <div className="rounded-2xl bg-red-50 p-12 text-center text-red-600">{error}</div>
         ) : paginated.length ? (
           <>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {paginated.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            <div className="mt-6 flex justify-center gap-2">
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setPage(index + 1)}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                    page === index + 1 ? 'bg-brand-blue text-white' : 'bg-white text-brand-blue'
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
+
+            {totalPages > 1 && (
+              <div className="mt-16 flex justify-center gap-2">
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setPage(index + 1)}
+                    className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${page === index + 1
+                        ? 'bg-brand-black text-white'
+                        : 'bg-transparent text-brand-gray hover:bg-brand-light'
+                      }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+            )}
           </>
         ) : (
-          <div className="rounded-2xl bg-white p-10 text-center text-slate-500">
-            No products match your filters yet. Try resetting filters.
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-brand-light py-24 text-center">
+            <p className="text-lg font-medium text-brand-black">No products found</p>
+            <p className="text-sm text-brand-gray">Try adjusting your filters</p>
+            <button
+              onClick={() => setFilters({ minPrice: '', maxPrice: '', brands: [], rating: null })}
+              className="mt-4 text-sm font-semibold text-brand-accent hover:underline"
+            >
+              Clear all filters
+            </button>
           </div>
         )}
       </div>

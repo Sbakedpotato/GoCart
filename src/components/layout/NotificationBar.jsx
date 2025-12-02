@@ -12,7 +12,11 @@ const NotificationBar = () => {
   }, [])
 
   if (!message) return null
-  return <div className="bg-brand-blue px-4 py-2 text-center text-sm text-white">{message}</div>
+  return (
+    <div className="bg-brand-black px-4 py-2.5 text-center text-xs font-medium tracking-wide text-white">
+      {message}
+    </div>
+  )
 }
 
 export default NotificationBar

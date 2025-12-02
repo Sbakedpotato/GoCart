@@ -23,22 +23,23 @@ const NavBar = () => {
     : fallbackLinks
 
   return (
-    <nav className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-8 px-4 py-3 text-sm font-semibold text-slate-600">
+    <nav className="border-b border-brand-light bg-white/50 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-[1400px] items-center gap-8 px-6 py-3 text-sm font-medium text-brand-gray">
         <Link
           to="/categories"
-          className="flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-slate-700"
+          className="flex items-center gap-2 text-brand-dark hover:text-brand-black"
         >
           <FiChevronDown />
           All Categories
         </Link>
-        <div className="flex flex-1 flex-wrap gap-4">
+        <div className="flex flex-1 gap-6 overflow-x-auto no-scrollbar">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `hover:text-brand-blue ${isActive ? 'text-brand-blue' : ''}`
+                `whitespace-nowrap transition-colors hover:text-brand-black ${isActive ? 'text-brand-black font-semibold' : ''
+                }`
               }
             >
               {link.label}
