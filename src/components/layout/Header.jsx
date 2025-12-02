@@ -3,10 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FiUser, FiHeart, FiShoppingCart } from 'react-icons/fi'
 import SearchBar from './SearchBar'
 import { useAuth } from '../../context/AuthContext'
+import { useCart } from '../../context/CartContext'
 
 const Header = () => {
   const { user, logout } = useAuth()
+  const { items } = useCart()
   const navigate = useNavigate()
+  const cartCount = items.reduce((sum, item) => sum + (item.quantity || 1), 0)
 
   return (
     <header className="bg-white px-4 py-4 shadow-sm">
@@ -54,9 +57,14 @@ const Header = () => {
             <FiHeart size={22} />
             Wishlist
           </button>
-          <Link to="/cart" className="flex flex-col items-center text-xs font-semibold">
+          <Link to="/cart" className="relative flex flex-col items-center text-xs font-semibold">
             <FiShoppingCart size={22} />
             Cart
+            {cartCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-orange px-1 text-[11px] font-bold text-white">
+                {cartCount}
+              </span>
+            )}
           </Link>
         </div>
       </div>

@@ -1,16 +1,22 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiStar, FiHeart } from 'react-icons/fi'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useAuth } from '../../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart()
   const { toggle, items } = useWishlist()
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const [justAdded, setJustAdded] = useState(false)
+
+  useEffect(() => {
+    if (!justAdded) return
+    const timer = setTimeout(() => setJustAdded(false), 1500)
+    return () => clearTimeout(timer)
+  }, [justAdded])
 
   if (!product) return null
 
@@ -65,10 +71,17 @@ const ProductCard = ({ product }) => {
 
       <div className="mt-4 flex items-center gap-2">
         <button
-          onClick={() => addToCart(product)}
-          className="flex-1 rounded-full bg-brand-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900"
+          onClick={() => {
+            addToCart(product)
+            setJustAdded(true)
+          }}
+          className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold text-white transition ${
+            justAdded
+              ? 'bg-emerald-600 hover:bg-emerald-600'
+              : 'bg-brand-blue hover:bg-slate-900'
+          }`}
         >
-          Add to Cart
+          {justAdded ? 'Added!' : 'Add to Cart'}
         </button>
         <button
           type="button"

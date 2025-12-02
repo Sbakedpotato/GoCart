@@ -10,6 +10,10 @@ import RegisterPage from './pages/RegisterPage'
 import AccountPage from './pages/AccountPage'
 import WishlistPage from './pages/WishlistPage'
 import NotFoundPage from './pages/NotFoundPage'
+import ContactPage from './pages/ContactPage'
+import FAQPage from './pages/FAQPage'
+import LocationsPage from './pages/LocationsPage'
+import PoliciesPage from './pages/PoliciesPage'
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
         <Route path="/product/:productId" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/faqs" element={<FAQPage />} />
+        <Route path="/locations" element={<LocationsPage />} />
+        <Route path="/policies" element={<PoliciesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/account" element={<AccountPage />} />

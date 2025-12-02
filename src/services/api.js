@@ -20,7 +20,16 @@ async function request(path, options = {}) {
     const message = await response.text()
     throw new Error(message || `Request failed: ${response.status}`)
   }
-  return response.json()
+
+  // Gracefully handle empty/204 responses from endpoints like DELETE wishlist
+  if (response.status === 204) return null
+
+  const contentType = response.headers.get('content-type') || ''
+  if (contentType.includes('application/json')) {
+    return response.json()
+  }
+  const text = await response.text()
+  return text ? text : null
 }
 
 export const api = {

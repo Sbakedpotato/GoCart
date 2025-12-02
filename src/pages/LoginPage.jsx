@@ -29,53 +29,70 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-      <h1 className="text-3xl font-semibold text-slate-900">Welcome back</h1>
-      <p className="mt-2 text-sm text-slate-500">Sign in to access personalized AI deals.</p>
+    <div className="mx-auto max-w-xl rounded-3xl bg-white p-10 shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold text-slate-900">Welcome back</h1>
+        <p className="mt-2 text-sm text-slate-500">
+          Sign in to continue shopping with a personalized experience.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <div>
-          <label className="text-sm font-semibold text-slate-700">Email</label>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="relative">
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
-            className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3"
-            placeholder="you@example.com"
+            className="peer w-full rounded-2xl border border-slate-200 bg-slate-50/40 px-4 py-4 text-sm text-slate-900 shadow-inner focus:border-brand-blue focus:bg-white focus:ring-4 focus:ring-brand-blue/20"
+            placeholder=" "
             required
           />
+          <label className="pointer-events-none absolute left-4 top-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-brand-blue">
+            Email address
+          </label>
         </div>
-        <div>
-          <label className="text-sm font-semibold text-slate-700">Password</label>
+
+        <div className="relative">
           <input
             type="password"
             name="password"
             value={form.password}
             onChange={handleChange}
-            className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3"
-            placeholder="••••••••"
+            className="peer w-full rounded-2xl border border-slate-200 bg-slate-50/40 px-4 py-4 text-sm text-slate-900 shadow-inner focus:border-brand-blue focus:bg-white focus:ring-4 focus:ring-brand-blue/20"
+            placeholder=" "
             required
           />
-          <button type="button" className="mt-2 text-xs font-semibold text-brand-blue">
+          <label className="pointer-events-none absolute left-4 top-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition-all duration-200 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-brand-blue">
+            Password
+          </label>
+          <button
+            type="button"
+            className="mt-2 text-xs font-semibold text-brand-blue hover:text-slate-900"
+          >
             Forgot password?
           </button>
         </div>
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-full bg-brand-blue py-3 font-semibold text-white hover:bg-slate-900 disabled:opacity-50"
+          className="w-full rounded-2xl bg-gradient-to-r from-brand-blue to-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-blue/30 transition hover:translate-y-[-1px] hover:shadow-xl disabled:opacity-50"
         >
-          {loading ? 'Signing in...' : 'Continue'}
+          {loading ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
 
-      {error && <p className="mt-3 text-center text-sm text-red-500">{error}</p>}
+      {error && (
+        <div className="mt-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
-      <p className="mt-4 text-sm text-center text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-500">
         New to GoCart?{' '}
-        <Link to="/register" className="font-semibold text-brand-blue">
-          Create your GoCart account
+        <Link to="/register" className="font-semibold text-brand-blue hover:text-slate-900">
+          Create account
         </Link>
       </p>
     </div>
