@@ -19,7 +19,7 @@ router.get('/hero-banners', async (req, res) => {
 })
 
 router.get('/categories', async (req, res) => {
-  const [rows] = await query('SELECT id, name FROM categories ORDER BY name ASC')
+  const [rows] = await query('SELECT id, name, image_url AS image FROM categories ORDER BY name ASC')
   res.json(rows)
 })
 

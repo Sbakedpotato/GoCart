@@ -21,16 +21,20 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Users
 INSERT INTO users (id, name, email, password_hash) VALUES
-(1, 'Demo User', 'demo@example.com', '$2a$10$X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7.X7'); -- Password: password
+(1, 'User1', 'User@example.com', '$2a$12$wbX016wYA8JCjvn64GporeeckICej2xNlVI2zMO20bBMz2olf5S2K'); -- Password: 12345678
 
 -- 2. Categories
-INSERT INTO categories (id, name) VALUES
-('laptops', 'Laptops'),
-('audio', 'Audio'),
-('wearables', 'Wearables'),
-('phones', 'Smartphones'),
-('cameras', 'Cameras'),
-('accessories', 'Accessories');
+INSERT INTO categories (id, name, image_url) VALUES
+('laptops', 'Laptops', 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=500'),
+('audio', 'Audio', 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=500'),
+('wearables', 'Wearables', 'https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&q=80&w=500'),
+('phones', 'Smartphones', 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=500'),
+('cameras', 'Cameras', 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=500'),
+('accessories', 'Accessories', 'https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=500'),
+('tablets', 'Tablets', 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=500'),
+('gaming', 'Gaming', 'https://images.unsplash.com/photo-1592840496694-26d035b52b48?auto=format&fit=crop&q=80&w=500'),
+('smarthome', 'Smart Home', 'https://images.unsplash.com/photo-1558002038-1091a166111c?auto=format&fit=crop&q=80&w=500'),
+('monitors', 'Monitors', 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=500');
 
 -- 3. Brands
 INSERT INTO brands (id, name, image_url) VALUES
@@ -39,7 +43,12 @@ INSERT INTO brands (id, name, image_url) VALUES
 ('samsung', 'Samsung', 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg'),
 ('bose', 'Bose', 'https://upload.wikimedia.org/wikipedia/commons/8/82/Bose_logo.svg'),
 ('canon', 'Canon', 'https://upload.wikimedia.org/wikipedia/commons/8/82/Canon_logo_vector.svg'),
-('logitech', 'Logitech', 'https://upload.wikimedia.org/wikipedia/commons/1/17/Logitech_logo.svg');
+('logitech', 'Logitech', 'https://upload.wikimedia.org/wikipedia/commons/1/17/Logitech_logo.svg'),
+('nintendo', 'Nintendo', 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg'),
+('microsoft', 'Microsoft', 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg'),
+('google', 'Google', 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg'),
+('lg', 'LG', 'https://upload.wikimedia.org/wikipedia/commons/b/bf/LG_logo_%282015%29.svg'),
+('dell', 'Dell', 'https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg');
 
 -- 4. Products
 INSERT INTO products (id, title, description, price, old_price, rating, review_count, category_id, brand_id, image_url, inventory_status, discount, features, specs) VALUES
@@ -61,7 +70,22 @@ INSERT INTO products (id, title, description, price, old_price, rating, review_c
 
 -- Cameras
 ('eos-r5', 'Canon EOS R5', 'Professional mirrorless redefined. 45MP full-frame sensor, 8K video, and advanced autofocus.', 339995.00, 350000.00, 4.9, 60, 'cameras', 'canon', 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=1000', 'Low Stock', 3, '["45MP Full-Frame Sensor", "8K Video Recording", "In-Body Image Stabilization", "Dual Pixel CMOS AF II"]', '{"Sensor": "Full-Frame CMOS", "Resolution": "45MP", "Video": "8K RAW", "ISO Range": "100-51200"}'),
-('a7iv', 'Sony Alpha 7 IV', 'The basic has never been this good. 33MP full-frame sensor with outstanding performance for both stills and movies.', 244990.00, 262990.00, 4.8, 110, 'cameras', 'sony', 'https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&q=80&w=1000', 'In Stock', 7, '["33MP Full-Frame Exmor R Sensor", "4K 60p Video", "Real-time Eye AF", "Vari-angle LCD"]', '{"Sensor": "Full-Frame Exmor R", "Resolution": "33MP", "Video": "4K 60p", "ISO Range": "100-51200"}');
+('a7iv', 'Sony Alpha 7 IV', 'The basic has never been this good. 33MP full-frame sensor with outstanding performance for both stills and movies.', 244990.00, 262990.00, 4.8, 110, 'cameras', 'sony', 'https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&q=80&w=1000', 'In Stock', 7, '["33MP Full-Frame Exmor R Sensor", "4K 60p Video", "Real-time Eye AF", "Vari-angle LCD"]', '{"Sensor": "Full-Frame Exmor R", "Resolution": "33MP", "Video": "4K 60p", "ISO Range": "100-51200"}'),
+
+-- Tablets
+('ipad-pro-12', 'iPad Pro 12.9"', 'The ultimate iPad experience with the M2 chip.', 112900.00, 0, 4.9, 320, 'tablets', 'apple', 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=1000', 'In Stock', 0, '["M2 chip", "12.9-inch Liquid Retina XDR display", "ProMotion technology", "Face ID"]', '{"Processor": "M2", "Storage": "128GB", "Display": "12.9-inch Liquid Retina XDR"}'),
+('galaxy-tab-s9', 'Samsung Galaxy Tab S9 Ultra', 'Crystal clear viewing on a large AMOLED display.', 108999.00, 119999.00, 4.7, 150, 'tablets', 'samsung', 'https://images.unsplash.com/photo-1588702547923-7093a6c3f067?auto=format&fit=crop&q=80&w=1000', 'In Stock', 9, '["14.6-inch Dynamic AMOLED 2X", "Snapdragon 8 Gen 2", "S Pen included", "IP68 water resistance"]', '{"Processor": "Snapdragon 8 Gen 2", "Storage": "256GB", "Display": "14.6-inch AMOLED"}'),
+
+-- Gaming
+('ps5', 'PlayStation 5', 'Experience lightning fast loading with an ultra-high speed SSD.', 54990.00, 0, 4.9, 1200, 'gaming', 'sony', 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=1000', 'In Stock', 0, '["Ultra-high speed SSD", "Ray Tracing", "4K-TV Gaming", "Haptic Feedback"]', '{"Storage": "825GB SSD", "Resolution": "4K", "Frame Rate": "Up to 120fps"}'),
+('xbox-series-x', 'Xbox Series X', 'The fastest, most powerful Xbox ever.', 55990.00, 0, 4.8, 950, 'gaming', 'microsoft', 'https://images.unsplash.com/photo-1621259182902-885a1c933c7d?auto=format&fit=crop&q=80&w=1000', 'In Stock', 0, '["12 TFLOPS Processing Power", "True 4K Gaming", "1TB Custom SSD", "8K HDR"]', '{"Storage": "1TB SSD", "Resolution": "True 4K", "Frame Rate": "Up to 120fps"}'),
+('switch-oled', 'Nintendo Switch OLED', '7-inch OLED screen for vivid colors and crisp contrast.', 33990.00, 0, 4.8, 800, 'gaming', 'nintendo', 'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&q=80&w=1000', 'In Stock', 0, '["7-inch OLED screen", "Wide adjustable stand", "Wired LAN port", "64GB internal storage"]', '{"Storage": "64GB", "Screen": "7-inch OLED", "Modes": "TV, Tabletop, Handheld"}'),
+
+-- Smart Home
+('nest-hub', 'Google Nest Hub (2nd Gen)', 'The center of your helpful home.', 7999.00, 9999.00, 4.6, 450, 'smarthome', 'google', 'https://images.unsplash.com/photo-1558002038-1091a166111c?auto=format&fit=crop&q=80&w=1000', 'In Stock', 20, '["Sleep Sensing", "Gesture Control", "Smart Home Control", "Entertainment"]', '{"Display": "7-inch touchscreen", "Connectivity": "Wi-Fi, Bluetooth", "Voice Assistant": "Google Assistant"}'),
+
+-- Monitors
+('lg-ultragear', 'LG UltraGear 27"', 'Nano IPS 1ms gaming monitor.', 32999.00, 45000.00, 4.7, 210, 'monitors', 'lg', 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=1000', 'In Stock', 27, '["27-inch QHD Nano IPS", "144Hz Refresh Rate", "NVIDIA G-SYNC Compatible", "HDR 10"]', '{"Resolution": "2560 x 1440", "Refresh Rate": "144Hz", "Response Time": "1ms"}');
 
 -- 5. Hero Banners
 INSERT INTO hero_banners (id, title, subtitle, cta, image_url, background) VALUES

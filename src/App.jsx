@@ -20,6 +20,7 @@ function App() {
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/categories" element={<CategoryPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/product/:productId" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />

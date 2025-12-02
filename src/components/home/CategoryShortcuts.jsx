@@ -19,12 +19,12 @@ const CategoryShortcuts = ({ categories = [] }) => {
             to={`/category/${category.id}`}
             className="group flex flex-col items-center gap-4 rounded-2xl bg-brand-light/30 p-6 transition-colors hover:bg-brand-light/60"
           >
-            <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white p-4 shadow-soft transition-transform group-hover:scale-110">
+            <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white shadow-soft transition-transform group-hover:scale-110">
               {category.image || category.imageUrl ? (
                 <img
                   src={category.image || category.imageUrl}
                   alt={category.label || category.name}
-                  className="h-full w-full object-contain"
+                  className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="h-full w-full bg-brand-light" />
