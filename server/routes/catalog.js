@@ -13,7 +13,7 @@ const safeParse = (value, fallback) => {
 
 router.get('/hero-banners', async (req, res) => {
   const [rows] = await query(
-    'SELECT id, title, subtitle, cta, image_url AS imageUrl, background FROM hero_banners ORDER BY created_at DESC'
+    'SELECT id, title, subtitle, link, cta, image_url AS imageUrl, background FROM hero_banners ORDER BY created_at DESC'
   )
   res.json(rows)
 })
