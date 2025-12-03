@@ -77,11 +77,32 @@ router.post('/', async (req, res) => {
 })
 
 // Delete product
+// Delete product
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        await query('DELETE FROM products WHERE id = ?', [id])
-        res.json({ message: 'Product deleted' })
+
+        // 1. Check if product is in any orders
+        const [orderItems] = await query('SELECT id FROM order_items WHERE product_id = ? LIMIT 1', [id])
+        if (orderItems.length > 0) {
+            return res.status(400).json({
+                message: 'Cannot delete product because it is part of existing orders. Consider archiving it instead.'
+            })
+        }
+
+        // 2. Delete from related tables (foreign key constraints)
+        await query('DELETE FROM flash_deals WHERE product_id = ?', [id])
+        await query('DELETE FROM recommendation_items WHERE product_id = ?', [id])
+        await query('DELETE FROM wishlists WHERE product_id = ?', [id])
+
+        // 3. Delete the product
+        const [result] = await query('DELETE FROM products WHERE id = ?', [id])
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Product not found' })
+        }
+
+        res.json({ message: 'Product deleted successfully' })
     } catch (error) {
         console.error('Delete product error:', error)
         res.status(500).json({ message: 'Failed to delete product' })
