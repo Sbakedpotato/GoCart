@@ -134,7 +134,7 @@ export default function Products() {
                                                 {product.category_name || '-'}
                                             </td>
                                             <td className="px-8 py-5 font-bold text-brand-black">
-                                                ${Number(product.price).toLocaleString()}
+                                                Rs. {Number(product.price).toLocaleString()}
                                             </td>
                                             <td className="px-8 py-5">
                                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${product.inventory_status === 'In Stock' ? 'bg-green-100 text-green-700' :

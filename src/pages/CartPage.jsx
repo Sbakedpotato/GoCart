@@ -81,13 +81,22 @@ const CartPage = () => {
       navigate('/login')
       return
     }
+
+    if (useSavedAddress && !selectedAddressId) {
+      alert('Please select an address to proceed')
+      return
+    }
+
     setLoading(true)
     setError('')
     setMessage('')
     try {
       const payload = {
         items: items.map((item) => ({ productId: item.id, quantity: item.quantity })),
-        shipping,
+        shipping: {
+          ...shipping,
+          addressId: useSavedAddress ? selectedAddressId : undefined,
+        },
       }
       const result = await api.checkout(payload)
       clearCart()
@@ -178,81 +187,85 @@ const CartPage = () => {
             </div>
 
             <div className="mt-8 space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-wide text-brand-gray">Shipping Details</h3>
+              {isAuthenticated && (
+                <>
+                  <h3 className="text-xs font-bold uppercase tracking-wide text-brand-gray">Shipping Details</h3>
 
-              {savedAddresses.length > 0 && (
-                <div className="flex rounded-xl bg-brand-light/30 p-1">
-                  <button
-                    onClick={() => setUseSavedAddress(true)}
-                    className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${useSavedAddress ? 'bg-white shadow-sm text-brand-black' : 'text-brand-gray hover:text-brand-black'
-                      }`}
-                  >
-                    Saved Address
-                  </button>
-                  <button
-                    onClick={() => setUseSavedAddress(false)}
-                    className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${!useSavedAddress ? 'bg-white shadow-sm text-brand-black' : 'text-brand-gray hover:text-brand-black'
-                      }`}
-                  >
-                    New Address
-                  </button>
-                </div>
-              )}
-
-              {useSavedAddress && savedAddresses.length > 0 ? (
-                <div className="space-y-3">
-                  {savedAddresses.map((addr) => (
-                    <div
-                      key={addr.id}
-                      onClick={() => handleSelectAddress(addr)}
-                      className={`cursor-pointer rounded-xl border p-4 transition-all ${selectedAddressId === addr.id
-                        ? 'border-brand-black bg-white shadow-sm'
-                        : 'border-transparent bg-white/50 hover:bg-white'
-                        }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-bold uppercase tracking-wide text-brand-black">{addr.label}</span>
-                        {selectedAddressId === addr.id && (
-                          <div className="h-2 w-2 rounded-full bg-brand-black" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-brand-black">{addr.recipient}</p>
-                      <p className="text-xs text-brand-gray">{addr.line1}, {addr.city}</p>
-                      <p className="text-xs text-brand-gray">{addr.phone}</p>
+                  {savedAddresses.length > 0 && (
+                    <div className="flex rounded-xl bg-brand-light/30 p-1">
+                      <button
+                        onClick={() => setUseSavedAddress(true)}
+                        className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${useSavedAddress ? 'bg-white shadow-sm text-brand-black' : 'text-brand-gray hover:text-brand-black'
+                          }`}
+                      >
+                        Saved Address
+                      </button>
+                      <button
+                        onClick={() => setUseSavedAddress(false)}
+                        className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${!useSavedAddress ? 'bg-white shadow-sm text-brand-black' : 'text-brand-gray hover:text-brand-black'
+                          }`}
+                      >
+                        New Address
+                      </button>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4 animate-fade-in">
-                  <input
-                    name="recipient"
-                    value={shipping.recipient}
-                    onChange={handleShippingChange}
-                    className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
-                    placeholder="Full Name"
-                  />
-                  <input
-                    name="phone"
-                    value={shipping.phone}
-                    onChange={handleShippingChange}
-                    className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
-                    placeholder="Phone Number"
-                  />
-                  <input
-                    name="line1"
-                    value={shipping.line1}
-                    onChange={handleShippingChange}
-                    className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
-                    placeholder="Address"
-                  />
-                  <input
-                    name="city"
-                    value={shipping.city}
-                    onChange={handleShippingChange}
-                    className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
-                    placeholder="City"
-                  />
-                </div>
+                  )}
+
+                  {useSavedAddress && savedAddresses.length > 0 ? (
+                    <div className="space-y-3">
+                      {savedAddresses.map((addr) => (
+                        <div
+                          key={addr.id}
+                          onClick={() => handleSelectAddress(addr)}
+                          className={`cursor-pointer rounded-xl border p-4 transition-all ${selectedAddressId === addr.id
+                            ? 'border-brand-black bg-white shadow-sm'
+                            : 'border-transparent bg-white/50 hover:bg-white'
+                            }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-bold uppercase tracking-wide text-brand-black">{addr.label}</span>
+                            {selectedAddressId === addr.id && (
+                              <div className="h-2 w-2 rounded-full bg-brand-black" />
+                            )}
+                          </div>
+                          <p className="text-sm font-medium text-brand-black">{addr.recipient}</p>
+                          <p className="text-xs text-brand-gray">{addr.line1}, {addr.city}</p>
+                          <p className="text-xs text-brand-gray">{addr.phone}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4 animate-fade-in">
+                      <input
+                        name="recipient"
+                        value={shipping.recipient}
+                        onChange={handleShippingChange}
+                        className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
+                        placeholder="Full Name"
+                      />
+                      <input
+                        name="phone"
+                        value={shipping.phone}
+                        onChange={handleShippingChange}
+                        className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
+                        placeholder="Phone Number"
+                      />
+                      <input
+                        name="line1"
+                        value={shipping.line1}
+                        onChange={handleShippingChange}
+                        className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
+                        placeholder="Address"
+                      />
+                      <input
+                        name="city"
+                        value={shipping.city}
+                        onChange={handleShippingChange}
+                        className="w-full rounded-xl border-0 bg-white px-4 py-3 text-sm font-medium placeholder:text-brand-gray/50 focus:ring-2 focus:ring-brand-black"
+                        placeholder="City"
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </div>
 

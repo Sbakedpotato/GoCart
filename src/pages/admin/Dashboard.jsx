@@ -52,7 +52,7 @@ export default function Dashboard() {
                 />
                 <StatCard
                     title="Total Revenue"
-                    value={`$${stats.totalRevenue.toLocaleString()}`}
+                    value={`Rs. ${stats.totalRevenue.toLocaleString()}`}
                     icon={<FiDollarSign className="w-6 h-6 text-white" />}
                     color="bg-green-500"
                 />
@@ -88,14 +88,14 @@ export default function Dashboard() {
                                         </td>
                                         <td className="py-4">
                                             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
-                                                    order.status === 'Processing' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-gray-100 text-gray-700'
+                                                order.status === 'Processing' ? 'bg-blue-100 text-blue-700' :
+                                                    'bg-gray-100 text-gray-700'
                                                 }`}>
                                                 {order.status}
                                             </span>
                                         </td>
                                         <td className="py-4 pr-4 text-sm font-bold text-brand-black text-right">
-                                            ${Number(order.total).toLocaleString()}
+                                            Rs. {Number(order.total).toLocaleString()}
                                         </td>
                                     </tr>
                                 ))}

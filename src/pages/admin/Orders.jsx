@@ -147,7 +147,7 @@ export default function Orders() {
                                                 {new Date(order.created_at).toLocaleDateString()}
                                             </td>
                                             <td className="px-8 py-5 font-bold text-brand-black">
-                                                ${Number(order.total).toLocaleString()}
+                                                Rs. {Number(order.total).toLocaleString()}
                                             </td>
                                             <td className="px-8 py-5">
                                                 <select

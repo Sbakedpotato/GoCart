@@ -58,6 +58,22 @@ const AccountPage = () => {
     console.info('Address submission', newAddress)
   }
 
+  const handleRemoveAddress = async (addressId) => {
+    if (!window.confirm('Are you sure you want to remove this address?')) return
+
+    try {
+      await api.deleteAddress(addressId)
+      setAccount((prev) => ({
+        ...prev,
+        addresses: prev.addresses.filter((addr) => addr.id !== addressId),
+      }))
+    } catch (err) {
+      console.error('Failed to remove address:', err)
+      alert('Failed to remove address. Please try again.')
+    }
+  }
+
+
   return (
     <div className="space-y-12 pb-20">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
@@ -69,8 +85,8 @@ const AccountPage = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors ${activeTab === tab.id
-                    ? 'bg-brand-black text-white'
-                    : 'text-brand-gray hover:bg-brand-light/50 hover:text-brand-black'
+                  ? 'bg-brand-black text-white'
+                  : 'text-brand-gray hover:bg-brand-light/50 hover:text-brand-black'
                   }`}
               >
                 {tab.label}
@@ -173,6 +189,12 @@ const AccountPage = () => {
                       <span className="rounded-lg bg-brand-light/30 px-2 py-1 text-xs font-bold uppercase tracking-wide text-brand-black">
                         {address.label}
                       </span>
+                      <button
+                        onClick={() => handleRemoveAddress(address.id)}
+                        className="text-xs font-medium text-red-500 hover:text-red-600"
+                      >
+                        Remove
+                      </button>
                     </div>
                     <p className="font-bold text-brand-black">{address.recipient}</p>
                     <div className="mt-2 space-y-0.5 text-sm text-brand-gray">

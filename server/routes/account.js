@@ -52,4 +52,30 @@ router.get('/me', authenticate, async (req, res) => {
   })
 })
 
+router.delete('/addresses/:id', authenticate, async (req, res) => {
+  const userId = req.user.id
+  const addressId = req.params.id
+
+  try {
+    // First, unlink this address from any orders
+    await query('UPDATE orders SET shipping_address_id = NULL WHERE shipping_address_id = ?', [addressId])
+
+    const result = await query('DELETE FROM addresses WHERE id = ? AND user_id = ?', [
+      addressId,
+      userId,
+    ])
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Address not found or not authorized' })
+    }
+
+    res.json({ message: 'Address deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting address:', error)
+    res.status(500).json({ message: 'Failed to delete address' })
+  }
+
+})
+
+
 export default router

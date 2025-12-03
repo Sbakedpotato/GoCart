@@ -57,6 +57,7 @@ export const api = {
   getProductsByCategory: (categoryId) => request(`/products/category/${categoryId}`),
   getProductDetail: (productId) => request(`/products/${productId}`),
   getAccountOverview: () => request('/account/me', { auth: true }),
+  deleteAddress: (id) => request(`/account/addresses/${id}`, { method: 'DELETE', auth: true }),
   getNotification: () => request('/catalog/notification'),
   checkout: (payload) => request('/orders/checkout', { method: 'POST', body: JSON.stringify(payload), auth: true }),
   getWishlist: () => request('/wishlist', { auth: true }),

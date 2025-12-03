@@ -40,9 +40,9 @@ export default function OrderDetail() {
                     </p>
                 </div>
                 <div className={`ml-auto px-3 py-1 rounded-full text-sm font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'Processing' ? 'bg-blue-100 text-blue-800' :
-                            order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
-                                'bg-gray-100 text-gray-800'
+                    order.status === 'Processing' ? 'bg-blue-100 text-blue-800' :
+                        order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
                     }`}>
                     {order.status}
                 </div>
@@ -97,15 +97,15 @@ export default function OrderDetail() {
                                 <p className="text-sm text-brand-gray">Qty: {item.quantity}</p>
                             </div>
                             <div className="text-right">
-                                <p className="font-medium text-brand-black">${Number(item.price).toLocaleString()}</p>
-                                <p className="text-sm text-brand-gray">Total: ${(Number(item.price) * item.quantity).toLocaleString()}</p>
+                                <p className="font-medium text-brand-black">Rs. {Number(item.price).toLocaleString()}</p>
+                                <p className="text-sm text-brand-gray">Total: Rs. {(Number(item.price) * item.quantity).toLocaleString()}</p>
                             </div>
                         </div>
                     ))}
                 </div>
                 <div className="p-6 bg-brand-light/10 border-t border-brand-light flex justify-between items-center">
                     <span className="font-medium text-brand-gray">Total Amount</span>
-                    <span className="text-2xl font-bold text-brand-black">${Number(order.total).toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-brand-black">Rs. {Number(order.total).toLocaleString()}</span>
                 </div>
             </div>
         </div>
