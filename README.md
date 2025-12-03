@@ -40,6 +40,20 @@ npm install
    ```bash
    cp server/.env.example server/.env
    ```
+   Server `.env` format:
+   ```
+   PORT=4000
+   CLIENT_ORIGIN=http://localhost:5173
+
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=
+   DB_NAME=GoCart
+
+   JWT_SECRET=replace-with-long-random-string
+   JWT_EXPIRES_IN=7d
+   ```
 2. Start MySQL (e.g., via XAMPP) and create the database/tables:
    ```sql
    -- From MySQL CLI or phpMyAdmin
