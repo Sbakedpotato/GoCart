@@ -15,6 +15,7 @@ import FAQPage from './pages/FAQPage'
 import LocationsPage from './pages/LocationsPage'
 import PoliciesPage from './pages/PoliciesPage'
 import SearchPage from './pages/SearchPage'
+import AIRecommendationsPage from './pages/AIRecommendationsPage'
 import AdminLayout from './layouts/AdminLayout'
 import AdminLogin from './pages/admin/AdminLogin'
 import Dashboard from './pages/admin/Dashboard'
@@ -37,6 +38,7 @@ function App() {
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/product/:productId" element={<ProductPage />} />
+          <Route path="/recommendations" element={<AIRecommendationsPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/contact" element={<ContactPage />} />

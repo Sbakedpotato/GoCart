@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 const BrandsGrid = ({ brands = [] }) => {
   if (!brands.length) return null
   return (
@@ -6,8 +7,9 @@ const BrandsGrid = ({ brands = [] }) => {
       <h2 className="mb-8 text-center text-lg font-medium text-brand-gray">Trusted by Leading Brands</h2>
       <div className="flex flex-wrap justify-center gap-8 md:gap-16">
         {brands.map((brand) => (
-          <div
+          <Link
             key={brand.id}
+            to={`/categories?brand=${encodeURIComponent(brand.name)}`}
             className="flex items-center justify-center opacity-50 grayscale transition-all hover:opacity-100 hover:grayscale-0"
           >
             {brand.image || brand.imageUrl ? (
@@ -15,7 +17,7 @@ const BrandsGrid = ({ brands = [] }) => {
             ) : (
               <span className="text-lg font-bold text-brand-black">{brand.name}</span>
             )}
-          </div>
+          </Link>
         ))}
       </div>
     </section>

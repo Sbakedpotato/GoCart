@@ -104,6 +104,12 @@ export const api = {
       body: JSON.stringify(data),
       auth: true,
     }),
+  getAIRecommendations: async (limit = 4) => {
+    const data = await request('/products')
+    const products = data || []
+    // Randomly select products
+    return products.sort(() => 0.5 - Math.random()).slice(0, limit)
+  },
 }
 
 export async function login(email, password) {

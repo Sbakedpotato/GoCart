@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import FilterSidebar from '../components/catalog/FilterSidebar'
 import ProductCard from '../components/common/ProductCard'
 import { api } from '../services/api'
@@ -24,10 +24,17 @@ const sortProducts = (products, sortKey) => {
 
 const CategoryPage = () => {
   const { categoryId } = useParams()
+  const [searchParams] = useSearchParams()
+  const brandParam = searchParams.get('brand')
   const [allProducts, setAllProducts] = useState([])
   const [error, setError] = useState('')
   const [sort, setSort] = useState('relevance')
-  const [filters, setFilters] = useState({ minPrice: '', maxPrice: '', brands: [], rating: null })
+  const [filters, setFilters] = useState({
+    minPrice: '',
+    maxPrice: '',
+    brands: brandParam ? [brandParam] : [],
+    rating: null,
+  })
   const [page, setPage] = useState(1)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
@@ -132,8 +139,8 @@ const CategoryPage = () => {
                     key={index}
                     onClick={() => setPage(index + 1)}
                     className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${page === index + 1
-                        ? 'bg-brand-black text-white'
-                        : 'bg-transparent text-brand-gray hover:bg-brand-light'
+                      ? 'bg-brand-black text-white'
+                      : 'bg-transparent text-brand-gray hover:bg-brand-light'
                       }`}
                   >
                     {index + 1}

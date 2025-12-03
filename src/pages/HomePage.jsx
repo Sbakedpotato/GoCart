@@ -1,5 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import HeroCarousel from '../components/home/HeroCarousel'
 import CategoryShortcuts from '../components/home/CategoryShortcuts'
 import RecommendationSection from '../components/home/RecommendationSection'
@@ -9,29 +11,34 @@ import { api } from '../services/api'
 import Skeleton from '../components/common/Skeleton'
 
 const HomePage = () => {
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [banners, setBanners] = useState([])
   const [categories, setCategories] = useState([])
   const [recommendations, setRecommendations] = useState([])
+  const [aiRecommendations, setAiRecommendations] = useState([])
   const [deals, setDeals] = useState([])
   const [brands, setBrands] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [bannerData, categoryData, recData, dealsData, brandData] = await Promise.all([
+        const [bannerData, categoryData, recData, dealsData, brandData, aiData] = await Promise.all([
           api.getHeroBanners(),
           api.getCategoryShortcuts(),
           api.getRecommendations(),
           api.getFlashDeals(),
           api.getFeaturedBrands(),
+          isAuthenticated ? api.getAIRecommendations() : Promise.resolve([]),
         ])
         setBanners(bannerData)
         setCategories(categoryData)
         setRecommendations(recData)
         setDeals(dealsData)
         setBrands(brandData)
+        setAiRecommendations(aiData)
       } catch (err) {
         setError('Unable to load storefront data. Please try again.')
       } finally {
@@ -39,7 +46,7 @@ const HomePage = () => {
       }
     }
     fetchData()
-  }, [])
+  }, [isAuthenticated])
 
   if (loading) {
     return (
@@ -69,7 +76,13 @@ const HomePage = () => {
   return (
     <div className="space-y-8 pb-20">
       <HeroCarousel banners={banners} />
-      <CategoryShortcuts categories={categories} />
+      {isAuthenticated && aiRecommendations.length > 0 && (
+        <RecommendationSection
+          title="AI Recommendations For You"
+          products={aiRecommendations}
+          onSeeMore={() => navigate('/recommendations')}
+        />
+      )}
       <FlashDeals products={deals} />
       {recommendations.map((section) => (
         <RecommendationSection
@@ -79,6 +92,7 @@ const HomePage = () => {
         />
       ))}
       <BrandsGrid brands={brands} />
+      <CategoryShortcuts categories={categories} />
     </div>
   )
 }
